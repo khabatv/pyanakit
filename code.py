@@ -7,6 +7,8 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from tkinter import Tk, Label, Button, StringVar, OptionMenu, Entry
 from tkinter.filedialog import askopenfilename
+from scipy.stats import ttest_ind
+from scipy.stats import f_oneway
 
 # Step 1: Create a file dialog to select the input table
 Tk().withdraw()  # Prevents the root window from appearing immediately
@@ -107,6 +109,123 @@ def plot_kmeans_clusters_line_chart():
     plt.legend()
     plt.grid()
     plt.show()
+#####################################################################################################################################    
+#insert: statistical tests 
+#t test 
+#testing for normal distribution beforehand? Tweak with wilcoxon? 
+def add_statistical_analysis(melted_data, treatment_to_compare):
+    # Conduct a t-test between two treatments if applicable
+    treatments = melted_data[treatment_to_compare].unique()
+    if len(treatments) == 2:
+        group1 = melted_data[melted_data[treatment_to_compare] == treatments[0]]['Value']
+        group2 = melted_data[melted_data[treatment_to_compare] == treatments[1]]['Value']
+        # Perform the t-test (independant?)
+        t_stat, p_value = ttest_ind(group1, group2)
+        return t_stat, p_value
+        print(f"t-statistic: {t_stat}, p-value: {p_value}")
+    else:
+        print("No statistic! Current statistical analysis requires exactly two or more treatments.")
+        return None, None
+
+def add_anova_analysis(melted_data, treatment_to_compare):
+    # Perform ANOVA between multiple treatments
+    treatments = melted_data[treatment_to_compare].unique()
+    if len(treatments) > 2:
+        groups = [melted_data[melted_data[treatment_to_compare] == t]['Value'] for t in treatments]
+        f_stat, p_value = f_oneway(*groups)
+        
+        print(f"ANOVA F-statistic: {f_stat}, p-value: {p_value}")
+        return f_stat, p_value
+    else:
+        print("ANOVA requires more than two treatments.")
+        return None, None
+        
+def overlay_data_points_and_error_bars(melted_data, treatment_to_compare):
+    """
+    Overlay data points and error bars on a Seaborn plot.
+
+    Parameters:
+    melted_data (DataFrame): The processed data containing values and treatment info.
+    treatment_to_compare (str): The treatment or group column to compare.
+
+    """
+    # Compute means and standard deviations for each treatment
+    summary_stats = melted_data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std']).reset_index()
+    
+    # Plot the error bars manually on the same figure
+    for i, row in summary_stats.iterrows():
+        # Overlay error bars using mean and std
+        plt.errorbar(x=row[treatment_to_compare], y=row['mean'], yerr=row['std'],
+                     fmt='o', color='black', capsize=5)
+    
+# Define the process_data function to work in console
+def process_data(file_path, plot_type, treatment_to_compare):
+    try:
+        # Load data
+        data = pd.read_csv(file_path, sep="\t")  # Adjust sep if needed (e.g., comma for CSV)
+
+        # Clean data: drop rows with NaN values
+        data = data.dropna()
+
+        print(data.columns)
+        print(data.head())
+        # Reshape and process the data
+        melted_data = data.melt(id_vars="Accession", var_name="Treatment_Sample", value_name="Value")
+
+        # Extract treatment and sample information
+        melted_data[['Treatment1', 'Treatment2', 'Sample']] = melted_data['Treatment_Sample'].str.split('_', expand=True, n=2)
+        melted_data = melted_data.drop(columns=['Treatment_Sample'])  # Drop the original column
+    
+    # Dynamische Erstellung der Spalte "Unique_Treatment" basierend auf dem Vergleichswert
+        if treatment_to_compare == "Treatment1":
+            melted_data['Unique_Treatment'] = melted_data['Treatment1']
+        elif treatment_to_compare == "Treatment2":
+            melted_data['Unique_Treatment'] = melted_data['Treatment1'] + "_" + melted_data['Treatment2']
+        else: 
+            #hier müsste noch ein usecase geschaffen werden 
+            melted_data['Unique_Treatment'] = melted_data['Treatment1'] + "_" + melted_data['Treatment2'] + "_" + melted_data['Sample']
+        
+        t_stat, t_p_value = None, None
+        f_stat, f_p_value = None, None
+               
+        # Perform statistical analysis
+        if treatment_to_compare == "Treatment1":
+            print("Performing statistical analysis for Treatment1...")
+            t_stat, t_p_value = add_statistical_analysis(melted_data, treatment_to_compare)
+        else:
+            print(f"Performing ANOVA analysis for {treatment_to_compare}...")
+            f_stat, f_p_value = add_anova_analysis(melted_data, treatment_to_compare)
+            
+        # Generate the plot
+        plt.figure(figsize=(12, 6))
+        if plot_type == "Swarm_Plot":
+            sns.swarmplot(x=treatment_to_compare, y='Value', data=melted_data)
+            print("Generating Swarm Plot...")
+            overlay_data_points_and_error_bars(melted_data, treatment_to_compare)
+            
+        elif plot_type == "Heatmap":
+            #option for pivoting with sample information 
+            #melted_data['Unique_Treatment'] = melted_data['Treatment1'] + "_" + melted_data['Treatment2'] + "_" + melted_data['Sample']
+            #heatmap_data = pd.pivot(melted_data, index="Accession", columns="Unique_Treatment", values="Value")
+            
+            #aggfunc because identical treat1 und treat2 combinations
+            heatmap_data = pd.pivot_table(melted_data, index="Accession", columns="Unique_Treatment", values="Value", aggfunc="mean")
+            sns.heatmap(heatmap_data, cmap="YlGnBu", annot=False)
+            print("Generating Heatmap...")
+            
+        if t_stat is not None and t_p_value is not None:
+            plt.text(0.5, 1.05, f't-stat: {t_stat:.4f}, p-value: {t_p_value:.4f}', 
+                     ha='center', va='center', transform=plt.gca().transAxes, color='blue')
+        if f_stat is not None and f_p_value is not None:
+            plt.text(0.5, 1.05, f'F-stat: {f_stat:.4f}, p-value: {f_p_value:.4f}', 
+                     ha='center', va='center', transform=plt.gca().transAxes, color='blue')
+            
+        # Show the plot
+        plt.show()
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+#####################################################################################################################################  
 
 # Step 8: Create a simple GUI for selecting parameters, principal components for PCA, and number of clusters for KMeans
 def create_gui():
