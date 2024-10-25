@@ -94,8 +94,7 @@ def process_data():
 
         elif plot_type == "Histogram":
             sns.histplot(melted_data['Value'], bins=20)
-            
-        ####################################
+
         elif plot_type == "Heatmap":
             if treatment_to_compare not in ["Treatment1", "Treatment2"]:
                 raise ValueError("Unsupported treatment specified.")
@@ -116,8 +115,6 @@ def process_data():
             #durch overlay_data.. wird der plot schon kreiiert mit zwei Farben, -> sns. swarmplot unnötig
             sns.swarmplot(x=treatment_to_compare, y='Value', data=melted_data)
             overlay_data_points_and_error_bars(melted_data, treatment_to_compare)
-        ####################################
-        
         if t_stat is not None and t_p_value is not None:
             plt.title(f't-stat: {t_stat:.4f}, p-value: {t_p_value:.4f}', 
                      ha='center')#, va='center', transform=plt.gca().transAxes, color='blue')
@@ -125,7 +122,6 @@ def process_data():
             plt.title(f'F-stat: {f_stat:.4f}, p-value: {f_p_value:.4f}', fontsize = 10, 
                      ha='center', va='top', x=0.47, y=1.02, color='blue')
             
-        
         plt.suptitle(f'{plot_type} for {treatment_to_compare}', fontsize = 18, ha='center', x=0.5)
         plt.xlabel(f'{treatment_to_compare}')
         plt.ylabel('Values')
@@ -140,7 +136,7 @@ def process_data():
 # Function to overlay data points and error bars on plots
 def overlay_data_points_and_error_bars(melted_data, treatment_to_compare):
     summary_stats = melted_data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std', 'count']).reset_index()
-    # Standard error of the mean? What is the message of this plot? Variety of datapoints or "correctnes" of mean? 
+    # Standard error of the mean? What is the message of this plot?
     summary_stats['error'] = summary_stats['std'] / summary_stats['count'] ** 0.5  
 
     # Overlay individual data points
@@ -207,8 +203,7 @@ def perform_pca():
 
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred during PCA: {str(e)}")
-        
-###################################################################################################
+
 def add_statistical_analysis(melted_data, treatment_to_compare):
     # Conduct a t-test between two treatments if applicable
     treatments = melted_data[treatment_to_compare].unique()
@@ -236,7 +231,6 @@ def add_anova_analysis(melted_data, treatment_to_compare):
     else:
         print("ANOVA requires more than two treatments.")
         return None, None
-###################################################################################################
 
 # Step 5: Set up the GUI
 root = Tk()
@@ -259,7 +253,6 @@ root.grid_rowconfigure(6, weight=1)
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=2)
 root.grid_columnconfigure(2, weight=1)
-
 
 # Create UI elements
 label = Label(root, text="Selected file:")
