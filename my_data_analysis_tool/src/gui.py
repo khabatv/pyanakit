@@ -7,9 +7,9 @@ Created on Mon Oct 28 11:32:21 2024
 
 #GUI related Code 
 from tkinter import Tk, Label, Button, StringVar, filedialog, OptionMenu, LabelFrame
-#from data_processing import process_data
-#from pca_analysis import perform_pca
-#from ?? import plot_clustermap
+from data_processing import process_data
+from clustermap_analysis import plot_clustermap
+from pca_analysis import perform_pca
 
 #gehört das hier in utils? 
 def select_file():
@@ -18,7 +18,6 @@ def select_file():
                                            filetypes=[("Text files", "*.txt"), ("CSV files", "*.csv")])
     if file_path:
         file_path_var.set(file_path)  # Update displayed file path
-
 
 #create window 
 root = Tk()
@@ -30,6 +29,13 @@ plot_type_var = StringVar(value="Violin Plot")  # Default plot type
 treatment_var = StringVar(value="Treatment2")  # Default treatment to compare
 cluster_method_var = StringVar(value="average")  # Default clustering method
 color_map_var = StringVar(value="viridis")  # Default color map
+
+#um Werte für process_data nutzbar zu machen 
+def get_plot_type():
+    return plot_type_var.get()
+def get_treatment():
+    return treatment_var.get()
+
 #ensure realtiv window and elementsize 
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=1)

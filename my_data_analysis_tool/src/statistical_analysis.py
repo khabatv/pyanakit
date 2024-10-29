@@ -13,6 +13,6 @@ def perform_t_test (data1, data2):
     t_stat, t_p_value = ttest_ind(data1, data2)
     return {'test': 't-test', 'stat': t_stat, 'p_value': t_p_value}
 
-def preform_anova(*groups):
+def perform_anova(*groups):
     f_stat, p_value = f_oneway(*groups)
     return {'test': 'anova', 'stat': f_stat, 'p_value': p_value}
