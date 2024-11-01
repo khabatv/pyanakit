@@ -21,9 +21,11 @@ from utils import data, file_path
 import pandas as pd
 from tkinter import messagebox
 import matplotlib.pyplot as plt
-from gui import get_plot_type, get_treatment#um Werte für process_data nutzbar zu machen 
+
 
 def process_data():
+    #lazy import? Weil sonst 
+    from gui import get_plot_type, get_treatment #um Werte für process_data nutzbar zu machen 
     global data, file_path
     if not file_path:
         messagebox.showerror("Error", "Please select a file first.")

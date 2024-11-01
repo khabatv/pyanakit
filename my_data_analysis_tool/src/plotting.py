@@ -19,6 +19,7 @@ def plot_violin(data, treatment_to_compare, y_column):
 def plot_box(data, treatment_to_compare, y_column, ci=None):
     sns.boxplot(x=treatment_to_compare, y='Value', data=data)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
+    style_plot("Box Plot", treatment_to_compare, y_column)
     
 def plot_bar(data, treatment_to_compare, y_column, ci=None):
     summary_stats = data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std', 'count']).reset_index()
@@ -27,24 +28,29 @@ def plot_bar(data, treatment_to_compare, y_column, ci=None):
     sns.barplot(x=treatment_to_compare, y='Value', data=data, estimator='mean', ci=None)
     plt.errorbar(summary_stats[treatment_to_compare], summary_stats['mean'], yerr=summary_stats['error'],
                      fmt='o', color='k', capsize=5, label='Mean ± SE')
+    style_plot("Bar Plot", treatment_to_compare, y_column)
 
 def plot_scatter(data, treatment_to_compare, y_column):
     #orange an blue data point on the plot, the same datapoint-information? 
     sns.scatterplot(data=data, x=treatment_to_compare, y='Value', color="red", alpha=.6, jitter=True)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
+    style_plot("Scatter Plot", treatment_to_compare, y_column)
     
 def plot_line(data, treatment_to_compare, y_column):
     summary_stats = data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std']).reset_index()
     sns.lineplot(data=data, x=treatment_to_compare, y='Value', estimator='mean', ci=None)
     plt.errorbar(summary_stats[treatment_to_compare], summary_stats['mean'], yerr=summary_stats['std'],
                      fmt='o', color='k', capsize=5, label='Mean ± SD')
+    style_plot("Line Plot", treatment_to_compare, y_column)
 
 def plot_strip(data, treatment_to_compare, y_column):
     sns.stripplot(x=treatment_to_compare, y='Value', data=data, color='red', alpha=0.6, jitter=False)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
+    style_plot("Strip Plot", treatment_to_compare, y_column)
 
 def plot_hist(data, treatment_to_compare, y_column):
     sns.histplot(data['Value'], bins=20)
+    style_plot("Histogram", treatment_to_compare, y_column)
 
 def plot_heatmap(data, treatment_to_compare):
     if treatment_to_compare not in ["Treatment1", "Treatment2"]:
@@ -61,11 +67,13 @@ def plot_heatmap(data, treatment_to_compare):
 
     heatmap_data = pd.pivot_table(data, index="Accession", columns="Unique_Treatment", values="Value", aggfunc="mean")
     sns.heatmap(heatmap_data, cmap="YlGnBu", annot=False)
+    style_plot("Heatmap", treatment_to_compare)
 
 def plot_swarm(data, treatment_to_compare, y_column):
         #durch overlay_data.. wird der plot schon kreiiert mit zwei Farben, -> sns. swarmplot unnötig
     sns.swarmplot(x=treatment_to_compare, y='Value', data=data)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
+    style_plot("Swarm Plot", treatment_to_compare, y_column)
   
     
 def style_plot(plot_type, treatment_to_compare, y_column): 

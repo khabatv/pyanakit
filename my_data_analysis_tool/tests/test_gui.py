@@ -5,12 +5,9 @@ Created on Tue Oct 29 10:16:12 2024
 @author: past
 """
 
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
-
-
-
+#import sys
+#import os
+#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from gui import get_plot_type, get_treatment, plot_type_var, treatment_var
 
