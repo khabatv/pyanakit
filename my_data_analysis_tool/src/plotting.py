@@ -32,7 +32,8 @@ def plot_bar(data, treatment_to_compare, y_column, ci=None):
 
 def plot_scatter(data, treatment_to_compare, y_column):
     #orange an blue data point on the plot, the same datapoint-information? 
-    sns.scatterplot(data=data, x=treatment_to_compare, y='Value', color="red", alpha=.6, jitter=True)
+    #jitter = True rausgenommen, macht probleme beim Testen und option extisitert in dokumentation nicht
+    sns.scatterplot(data=data, x=treatment_to_compare, y='Value', color="red", alpha=.6)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
     style_plot("Scatter Plot", treatment_to_compare, y_column)
     
@@ -76,16 +77,15 @@ def plot_swarm(data, treatment_to_compare, y_column):
     style_plot("Swarm Plot", treatment_to_compare, y_column)
   
     
-def style_plot(plot_type, treatment_to_compare, y_column): 
-    plt.figure(figsize=(12,6))
+def style_plot(plot_type, treatment_to_compare, y_column=None): 
     plt.suptitle(f'{plot_type} for {treatment_to_compare}', fontsize = 18, ha='center', x=0.5)
     plt.xlabel(f'{treatment_to_compare}')
-    plt.ylabel('Values')
+    if y_column: 
+        plt.ylabel('Values')
     plt.xticks(rotation=45)
     plt.tight_layout()  # Ensure the layout is adjusted
     plt.legend()
-    plt.show()
-        
+            
 def overlay_data_points_and_error_bars(data, treatment_to_compare):
     summary_stats = data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std', 'count']).reset_index()
     # Standard error of the mean? What is the message of this plot?

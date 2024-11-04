@@ -99,6 +99,9 @@ def process_data():
         if f_stat is not None and f_p_value is not None:
             plt.title(f'F-stat: {f_stat:.4f}, p-value: {f_p_value:.4f}', fontsize = 10, 
                      ha='center', va='top', x=0.47, y=1.02, color='blue')
-
+        
+        #wegen doppelaufruf im plottin gmodul hier hin verschoben: 
+        plt.show()
+        
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {str(e)}")
