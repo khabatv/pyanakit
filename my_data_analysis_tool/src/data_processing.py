@@ -17,24 +17,29 @@ from plotting import (
     plot_heatmap,
     plot_swarm,
 )
-from utils import data, file_path
+#from utils import data, file_path
 import pandas as pd
 from tkinter import messagebox
 import matplotlib.pyplot as plt
 
+#trennen des ladens von datein und verarbeiten der datei 
+def load_data(file_path = None): 
+    if file_path is None: 
+        from gui import file_path as global_file_path 
+        file_path = global_file_path
+    data = data = pd.read_csv(file_path, sep="\t") 
+    return data, file_path
 
-def process_data():
-    #lazy import? Weil sonst 
-    from gui import get_plot_type, get_treatment #um Werte für process_data nutzbar zu machen 
-    global data, file_path
-    if not file_path:
+
+def process_data(data, plot_type=None, treatment_to_compare = None):
+    if plot_type is None or treatment_to_compare is None: 
+        from gui import get_plot_type, get_treatment
+        plot_type = get_plot_type() if plot_type is None else plot_type
+        treatment_to_compare = get_treatment() if treatment_to_compare is None else treatment_to_compare
+    if data.empty:
         messagebox.showerror("Error", "Please select a file first.")
         return
-    
     try:
-        # Load data
-        data = pd.read_csv(file_path, sep="\t")  # Adjust sep if needed (e.g., comma for CSV)
-
         # Clean data: drop rows with NaN values
         data = data.dropna()
 
@@ -45,12 +50,11 @@ def process_data():
         melted_data[['Treatment1', 'Treatment2', 'Sample']] = melted_data['Treatment_Sample'].str.split('_', expand=True, n=2)
         melted_data = melted_data.drop(columns=['Treatment_Sample'])  # Drop the original column
         
-        # Choose plot type
-        plot_type = get_plot_type()
+        if melted_data['Value'].dtype == 'object':
+            melted_data['Value'] = pd.to_numeric(melted_data['Value'], errors='coerce')
         
-        # Select treatment to compare (Treatment1 or Treatment2)
-        treatment_to_compare = get_treatment()
-
+        return melted_data
+        
         # Add statistical analysis before plotting
         t_stat, t_p_value = None, None
         f_stat, f_p_value = None, None

@@ -7,8 +7,8 @@ Created on Mon Oct 28 11:32:21 2024
 
 #GUI related Code 
 from tkinter import Tk, Label, Button, StringVar, filedialog, OptionMenu, LabelFrame
-from data_processing import process_data
-from clustermap_analysis import plot_clustermap
+from data_processing import process_data, load_data
+#from clustermap_analysis import plot_clustermap
 from pca_analysis import perform_pca
 
 #gehört das hier in utils? 
@@ -35,6 +35,10 @@ def get_plot_type():
     return plot_type_var.get()
 def get_treatment():
     return treatment_var.get()
+
+def process_data_from_gui():
+    data, file_path = load_data()  # Daten und Pfad aus der GUI laden
+    process_data(data=data)
 
 #ensure realtiv window and elementsize 
 root.grid_rowconfigure(0, weight=1)
@@ -82,7 +86,7 @@ treatment_menu = OptionMenu(root, treatment_var, "Treatment1", "Treatment2")
 treatment_menu.grid(row=3, column=1, columnspan=2, padx=5, pady=5, sticky='ew')
 
 # Button to process data and generate plots
-process_button = Button(root, text="Process Data and Generate Plots", command=process_data)
+process_button = Button(root, text="Process Data and Generate Plots", command=process_data_from_gui)
 process_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5, sticky='ew')  
 
 #Labelframe for visual seperation of PCa and CLustermap 
@@ -92,12 +96,14 @@ label_frame.columnconfigure(0, weight=1)
 label_frame.columnconfigure(1, weight=1)  
 
 # Button to plot Clustermap
-clustermap_button = Button(label_frame, text="Plot Clustermap", 
-                            command=lambda: plot_clustermap(data, 
-                                                             cluster_method_var.get(), 
-                                                             color_map_var.get(), 
-                                                             10, 8, 1, 0.1, 0.5))  # Example parameters
-clustermap_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew') 
+# =============================================================================
+# clustermap_button = Button(label_frame, text="Plot Clustermap", 
+#                             command=lambda: plot_clustermap(data, 
+#                                                              cluster_method_var.get(), 
+#                                                              color_map_var.get(), 
+#                                                              10, 8, 1, 0.1, 0.5))  # Example parameters
+# clustermap_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew') 
+# =============================================================================
 
 # Button to perform PCA
 pca_button = Button(label_frame, text="Perform PCA", command=perform_pca)
