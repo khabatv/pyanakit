@@ -4,16 +4,36 @@ Created on Tue Oct 29 09:33:13 2024
 
 @author: past
 """
-import matplotlib_inline.pyplot as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd 
 
+def load_data(file_path = None): 
+    if file_path is None: 
+        from gui import file_path as global_file_path 
+        file_path = global_file_path
+    data = pd.read_csv(file_path, sep="\t") 
+    data = data.dropna()
+    return data, file_path
 
-def plot_clustermap(data, method, cmap, width, height, font_size, line_thickness, dendro_line_thickness):
+def plot_clustermap(
+        data,
+        method = 'average', #guessed default value, original: cluster_method_var.get()
+        cmap = 'viridis', #guessed default value, original: color_map_var.get()
+        width = 10, 
+        height = 8, 
+        font_size = 1, 
+        line_thickness = 0.1, 
+        dendro_line_thickness = 0.5
+        ):
+      
+    
     plt.clf()  # Clear the current figure
     sns.set(font_scale=font_size)  # Set the font size
 
     # Clean data: drop rows with NaN values
-    data = data.dropna()
+    #drop na in load_data(), because we can not test if data is proper cleaned, cause output is only a plot!
+    #data = data.dropna()
 
     # Generate clustermap
     g = sns.clustermap(data.set_index('Accession'), method=method, metric='euclidean', cmap=cmap, cbar=True, 

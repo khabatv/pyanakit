@@ -27,7 +27,7 @@ def load_data(file_path = None):
     if file_path is None: 
         from gui import file_path as global_file_path 
         file_path = global_file_path
-    data = data = pd.read_csv(file_path, sep="\t") 
+    data = pd.read_csv(file_path, sep="\t") 
     return data, file_path
 
 

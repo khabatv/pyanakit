@@ -70,7 +70,7 @@ def test_load_data():
 def test_process_data(test_load_data):
     processed_data = process_data(data=test_load_data, plot_type='Violin Plot', treatment_to_compare='Treatment1')
     
-    assert processed_data is not None, "process data hat non ezurück gegeben"
+    assert processed_data is not None, "process data hat none zurück gegeben"
     
     expected_columns = {"Accession", "Treatment1", "Treatment2", "Sample", "Value"}
     assert set(processed_data.columns) == expected_columns, "Erwartete Spalten fehlen nach der Verarbeitung"

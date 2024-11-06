@@ -5,7 +5,7 @@ Created on Mon Oct 28 11:34:54 2024
 @author: past
 """
 
-#pca function
+#pca_analysis.py
 
 from tkinter import messagebox
 from sklearn.decomposition import PCA
@@ -14,11 +14,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-#änderung nach komplett tests
-data = None
+#aber woher kommen jetzt die Daten? perform pca muss irgendow die Daten herbekommen?? 
+#hier wird wie bei process_data() eine load_data gebraucht? 
+# gehört load data deswegen in utils? 
+#erstmal nur pro forma eingefügt:
 
-def perform_pca():
-    global data
+def load_data(file_path = None): 
+    if file_path is None: 
+        from gui import file_path as global_file_path 
+        file_path = global_file_path
+    data = pd.read_csv(file_path, sep="\t") 
+    #dropna schritt auch hier? 
+    data = data.dropna()
+    return data
+
+def perform_pca(data):
     if data is None:
         messagebox.showerror("Error", "Please select a file and load data first.")
 
@@ -48,8 +58,8 @@ def perform_pca():
 
         # Plot PCA results
         plt.figure(figsize=(10, 6))
-        #sns.scatterplot(x='Principal Component 1', y='Principal Component 2', data=pca_df)
-        plt.scatter(pca_df['Principal Component 1'], pca_df['Principal Component 2'])
+        sns.scatterplot(x='Principal Component 1', y='Principal Component 2', data=pca_df)
+        #plt.scatter(pca_df['Principal Component 1'], pca_df['Principal Component 2'])
         plt.title('PCA of Data')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')

@@ -82,7 +82,7 @@ Created on Mon Oct 28 11:45:22 2024
 #     assert plt.gcf().number, "Plot should be created with a figure number"
 # =============================================================================
 
-###test für alles
+###test_pca_analysis.py
 import pytest
 import pandas as pd
 from pca_analysis import perform_pca
