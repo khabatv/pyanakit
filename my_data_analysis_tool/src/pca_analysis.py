@@ -26,7 +26,7 @@ def load_data(file_path = None):
     data = pd.read_csv(file_path, sep="\t") 
     #dropna schritt auch hier? 
     data = data.dropna()
-    return data
+    return data, file_path
 
 def perform_pca(data):
     if data is None:
@@ -36,6 +36,7 @@ def perform_pca(data):
         # Drop non-numeric columns and handle NaNs
         numeric_data = data.select_dtypes(include=['number']).dropna()
         print(f"Bereinigter Datensatz:\n{numeric_data}\n")
+        print(f"Anzahl der verbleibenden Zeilen nach Bereinigung: {len(numeric_data)}")
         
         # Überprüfen, ob Daten nach Bereinigung existieren
         if numeric_data.empty:
@@ -59,14 +60,11 @@ def perform_pca(data):
         # Plot PCA results
         plt.figure(figsize=(10, 6))
         sns.scatterplot(x='Principal Component 1', y='Principal Component 2', data=pca_df)
-        #plt.scatter(pca_df['Principal Component 1'], pca_df['Principal Component 2'])
+        #sns.scatterplot(x=pca_result[:, 0], y=pca_result[:, 1])
         plt.title('PCA of Data')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
         
-        # Manuelle Anpassung der Achsenlimits nötig für test?
-        plt.xlim(pca_df['Principal Component 1'].min() - 1, pca_df['Principal Component 1'].max() + 1)
-        plt.ylim(pca_df['Principal Component 2'].min() - 1, pca_df['Principal Component 2'].max() + 1)
         
         plt.tight_layout()
         plt.show()
