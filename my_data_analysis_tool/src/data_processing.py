@@ -17,35 +17,18 @@ from plotting import (
     plot_heatmap,
     plot_swarm,
 )
-#from utils import data, file_path
+
 import pandas as pd
 from tkinter import messagebox
 import matplotlib.pyplot as plt
 
-#trennen des ladens von datein und verarbeiten der datei 
-def load_data(file_path = None): 
-    if file_path is None: 
-        from gui import file_path as global_file_path 
-        file_path = global_file_path
-    data = pd.read_csv(file_path, sep="\t") 
-    return data, file_path
-
-
-def process_data(data, plot_type=None, treatment_to_compare = None):
+def process_data(data, plot_type=None, treatment_to_compare = None):  
     if plot_type is None or treatment_to_compare is None: 
-        from gui import get_plot_type, get_treatment
-        plot_type = get_plot_type() if plot_type is None else plot_type
-        treatment_to_compare = get_treatment() if treatment_to_compare is None else treatment_to_compare
-    if data.empty:
-        messagebox.showerror("Error", "Please select a file first.")
-        return
+       raise ValueError("Plot_type and treatment_to_compare are required.")
+    
     try:
-        # Clean data: drop rows with NaN values
-        data = data.dropna()
-
         # Extract treatments and biological replicates
         melted_data = data.melt(id_vars="Accession", var_name="Treatment_Sample", value_name="Value")
-        
         # Extract treatment and sample information
         melted_data[['Treatment1', 'Treatment2', 'Sample']] = melted_data['Treatment_Sample'].str.split('_', expand=True, n=2)
         melted_data = melted_data.drop(columns=['Treatment_Sample'])  # Drop the original column
@@ -53,7 +36,10 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
         if melted_data['Value'].dtype == 'object':
             melted_data['Value'] = pd.to_numeric(melted_data['Value'], errors='coerce')
         
-        return melted_data
+        if melted_data['Value'].isnull().any():
+            print("Warning: 'Value' enthält NaN-Werte nach Konvertierung zu numerisch.")
+        
+        print(f"Data types after processing:\n{melted_data.dtypes}")
         
         # Add statistical analysis before plotting
         t_stat, t_p_value = None, None
@@ -103,9 +89,11 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
         if f_stat is not None and f_p_value is not None:
             plt.title(f'F-stat: {f_stat:.4f}, p-value: {f_p_value:.4f}', fontsize = 10, 
                      ha='center', va='top', x=0.47, y=1.02, color='blue')
-        
-        #wegen doppelaufruf im plottin gmodul hier hin verschoben: 
+    
+        #wegen doppelaufruf im plotting gmodul hier hin verschoben: 
         plt.show()
+        
+        return melted_data
         
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {str(e)}")

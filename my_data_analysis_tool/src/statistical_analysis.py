@@ -9,10 +9,30 @@ Created on Mon Oct 28 11:34:17 2024
 
 from scipy.stats import ttest_ind, f_oneway
 
-def perform_t_test (melted_data, treatment_to_compare): 
-    t_stat, t_p_value = ttest_ind(melted_data, treatment_to_compare)
-    return {'test': 't-test', 'stat': t_stat, 'p_value': t_p_value}
-
+def perform_t_test(melted_data, treatment_to_compare):
+    # Conduct a t-test between two treatments if applicable
+    treatments = melted_data[treatment_to_compare].unique()
+    if len(treatments) == 2:
+        group1 = melted_data[melted_data[treatment_to_compare] == treatments[0]]['Value']
+        group2 = melted_data[melted_data[treatment_to_compare] == treatments[1]]['Value']
+        # Perform the t-test (independant?)
+        t_stat, p_value = ttest_ind(group1, group2)
+        print(f"t-statistic: {t_stat}, p-value: {p_value}")
+        return t_stat, p_value
+        
+    else:
+        print("No statistic! Current statistical analysis requires exactly two or more treatments.")
+        return None, None
+    
 def perform_anova(melted_data, treatment_to_compare):
-    f_stat, p_value = f_oneway(melted_data, treatment_to_compare)
-    return {'test': 'anova', 'stat': f_stat, 'p_value': p_value}
+    # Perform ANOVA between multiple treatments
+    treatments = melted_data[treatment_to_compare].unique()
+    if len(treatments) > 2:
+        groups = [melted_data[melted_data[treatment_to_compare] == t]['Value'] for t in treatments]
+        f_stat, p_value = f_oneway(*groups)
+        
+        print(f"ANOVA F-statistic: {f_stat}, p-value: {p_value}")
+        return f_stat, p_value
+    else:
+        print("ANOVA requires more than two treatments.")
+        return None, None

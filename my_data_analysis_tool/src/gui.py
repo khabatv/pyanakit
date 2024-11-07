@@ -7,17 +7,20 @@ Created on Mon Oct 28 11:32:21 2024
 
 #GUI related Code 
 from tkinter import Tk, Label, Button, StringVar, filedialog, OptionMenu, LabelFrame
-from data_processing import process_data, load_data
-#from clustermap_analysis import plot_clustermap
+from utils import load_data 
+from data_processing import process_data
 from pca_analysis import perform_pca
+from clustermap_analysis import plot_clustermap
 
-#gehört das hier in utils? 
 def select_file():
-    global file_path
+    global file_path, loaded_data
     file_path = filedialog.askopenfilename(title="Select the input table", 
                                            filetypes=[("Text files", "*.txt"), ("CSV files", "*.csv")])
     if file_path:
         file_path_var.set(file_path)  # Update displayed file path
+        loaded_data = load_data(file_path)
+        if loaded_data is None: 
+            print("Failed to load data.")
 
 #create window 
 root = Tk()
@@ -37,9 +40,25 @@ def get_treatment():
     return treatment_var.get()
 
 def process_data_from_gui():
-    data, file_path = load_data()  # Daten und Pfad aus der GUI laden
-    process_data(data=data)
-
+    if loaded_data is not None: 
+        plot_type = get_plot_type()
+        treatment = get_treatment()
+        process_data(data=loaded_data, plot_type=plot_type, treatment_to_compare=treatment)
+    else: 
+        print("No data loaded.")
+    
+def pca_analysis_from_gui(): 
+    if loaded_data is not None:
+        perform_pca(data=loaded_data)
+    else: 
+        print("No data loaded.")
+        
+def plot_clustermap_from_gui():
+    if loaded_data is not None:
+        plot_clustermap(data=loaded_data)
+    else:
+        print("No data loaded.")
+    
 #ensure realtiv window and elementsize 
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=1)
@@ -96,17 +115,11 @@ label_frame.columnconfigure(0, weight=1)
 label_frame.columnconfigure(1, weight=1)  
 
 # Button to plot Clustermap
-# =============================================================================
-# clustermap_button = Button(label_frame, text="Plot Clustermap", 
-#                             command=lambda: plot_clustermap(data, 
-#                                                              cluster_method_var.get(), 
-#                                                              color_map_var.get(), 
-#                                                              10, 8, 1, 0.1, 0.5))  # Example parameters
-# clustermap_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew') 
-# =============================================================================
+clustermap_button = Button(label_frame, text="Plot Clustermap", command=plot_clustermap_from_gui)
+clustermap_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew') 
 
 # Button to perform PCA
-pca_button = Button(label_frame, text="Perform PCA", command=perform_pca)
+pca_button = Button(label_frame, text="Perform PCA", command=pca_analysis_from_gui)
 pca_button.grid(row=0, column=1, padx=5, pady=5, sticky='ew') 
 
 # Start the GUI

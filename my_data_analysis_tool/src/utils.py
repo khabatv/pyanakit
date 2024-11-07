@@ -11,14 +11,22 @@ Created on Mon Oct 28 11:35:12 2024
 #Logging and errormanagement
 #configuration management 
   
-from tkinter import StringVar
+# utils.py
+import pandas as pd
 
-# Global variables to store data and file path
-data = None
-file_path = ""
-file_path_var = None
+def load_data(file_path):
+    if not file_path:
+        raise ValueError("File path is required.")
 
-# Initialize any necessary global variables for the GUI or data processing
-def initialize_globals():
-    global file_path_var
-    file_path_var = StringVar()
+    # checking 
+    if file_path.endswith('.csv'):
+        data = pd.read_csv(file_path)
+    elif file_path.endswith('.txt'):
+        data = pd.read_table(file_path)
+    else:
+        raise ValueError("Unsupported file format")
+
+    #clean data 
+    data = data.dropna()
+    return data
+

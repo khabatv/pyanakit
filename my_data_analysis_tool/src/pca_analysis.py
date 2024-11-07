@@ -14,20 +14,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-#aber woher kommen jetzt die Daten? perform pca muss irgendow die Daten herbekommen?? 
-#hier wird wie bei process_data() eine load_data gebraucht? 
-# gehört load data deswegen in utils? 
-#erstmal nur pro forma eingefügt:
-
-def load_data(file_path = None): 
-    if file_path is None: 
-        from gui import file_path as global_file_path 
-        file_path = global_file_path
-    data = pd.read_csv(file_path, sep="\t") 
-    #dropna schritt auch hier? 
-    data = data.dropna()
-    return data, file_path
-
 def perform_pca(data):
     if data is None:
         messagebox.showerror("Error", "Please select a file and load data first.")

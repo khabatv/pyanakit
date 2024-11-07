@@ -6,15 +6,6 @@ Created on Tue Oct 29 09:33:13 2024
 """
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd 
-
-def load_data(file_path = None): 
-    if file_path is None: 
-        from gui import file_path as global_file_path 
-        file_path = global_file_path
-    data = pd.read_csv(file_path, sep="\t") 
-    data = data.dropna()
-    return data, file_path
 
 def plot_clustermap(
         data,
