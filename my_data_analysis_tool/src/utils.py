@@ -13,7 +13,7 @@ Created on Mon Oct 28 11:35:12 2024
 import pandas as pd
 from tkinter import filedialog
 
-def load_data(file_path):
+def load_clean(file_path):
     if not file_path:
         raise ValueError("File path is required.")
 

@@ -6,11 +6,10 @@ Created on Mon Oct 28 11:32:21 2024
 """
 
 from tkinter import Tk, Label, Button, StringVar, OptionMenu, LabelFrame, messagebox
-from utils import load_data 
 from data_processing import process_data
 from pca_analysis import perform_pca
 from clustermap_analysis import plot_clustermap
-from utils import select_file_path
+from utils import select_file_path, load_clean
 
 def select_file():
     global file_path, loaded_data
@@ -18,7 +17,7 @@ def select_file():
     
     if file_path:
         file_path_var.set(file_path)  # Update displayed file path
-        loaded_data = load_data(file_path)
+        loaded_data = load_clean(file_path)
         if loaded_data is None: 
             print("Failed to load data.")
 
