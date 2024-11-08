@@ -21,8 +21,6 @@ def perform_pca(data):
     try:
         # Drop non-numeric columns and handle NaNs
         numeric_data = data.select_dtypes(include=['number']).dropna()
-        print(f"Bereinigter Datensatz:\n{numeric_data}\n")
-        print(f"Anzahl der verbleibenden Zeilen nach Bereinigung: {len(numeric_data)}")
         
         # Überprüfen, ob Daten nach Bereinigung existieren
         if numeric_data.empty:
@@ -32,12 +30,10 @@ def perform_pca(data):
         
         # Standardize the data
         standardized_data = StandardScaler().fit_transform(numeric_data)
-        print(f"Standardized Data Shape: {standardized_data.shape}")  # Debugging-Ausgabe
         
         # Perform PCA
         pca = PCA(n_components=2)
         pca_result = pca.fit_transform(standardized_data)
-        print(f"PCA Ergebnis:\n{pca_result}\n")  # Debugging-Ausgabe
 
         # Create a DataFrame for PCA results
         pca_df = pd.DataFrame(data=pca_result, columns=['Principal Component 1', 'Principal Component 2'])
@@ -50,8 +46,7 @@ def perform_pca(data):
         plt.title('PCA of Data')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
-        
-        
+                
         plt.tight_layout()
         plt.show()
     

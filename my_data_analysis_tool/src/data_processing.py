@@ -17,7 +17,6 @@ from plotting import (
     plot_heatmap,
     plot_swarm,
 )
-
 import pandas as pd
 from tkinter import messagebox
 import matplotlib.pyplot as plt
@@ -38,8 +37,6 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
         
         if melted_data['Value'].isnull().any():
             print("Warning: 'Value' enthält NaN-Werte nach Konvertierung zu numerisch.")
-        
-        print(f"Data types after processing:\n{melted_data.dtypes}")
         
         # Add statistical analysis before plotting
         t_stat, t_p_value = None, None
@@ -82,15 +79,15 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
             
         elif plot_type == "Swarm Plot":
             plot_swarm(melted_data, treatment_to_compare,'Value')
-           
+         
         if t_stat is not None and t_p_value is not None:
             plt.title(f't-stat: {t_stat:.4f}, p-value: {t_p_value:.4f}', 
-                     ha='center')#, va='center', transform=plt.gca().transAxes, color='blue')
+                     ha='center', va='top', x=0.47, y=1.02, color='blue')
         if f_stat is not None and f_p_value is not None:
             plt.title(f'F-stat: {f_stat:.4f}, p-value: {f_p_value:.4f}', fontsize = 10, 
                      ha='center', va='top', x=0.47, y=1.02, color='blue')
     
-        #wegen doppelaufruf im plotting gmodul hier hin verschoben: 
+        #to prevent double plotting error 
         plt.show()
         
         return melted_data

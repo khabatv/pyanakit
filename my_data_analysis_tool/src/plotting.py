@@ -10,7 +10,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 
-#funktioniert das mit dem dem treatment to compare und dem Value argumenten? 
 def plot_violin(data, treatment_to_compare, y_column):
     sns.violinplot(x=treatment_to_compare, y='Value', data=data, inner=None)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
@@ -71,7 +70,6 @@ def plot_heatmap(data, treatment_to_compare):
     style_plot("Heatmap", treatment_to_compare)
 
 def plot_swarm(data, treatment_to_compare, y_column):
-        #durch overlay_data.. wird der plot schon kreiiert mit zwei Farben, -> sns. swarmplot unnötig
     sns.swarmplot(x=treatment_to_compare, y='Value', data=data)
     overlay_data_points_and_error_bars(data, treatment_to_compare)
     style_plot("Swarm Plot", treatment_to_compare, y_column)
@@ -83,7 +81,7 @@ def style_plot(plot_type, treatment_to_compare, y_column=None):
     if y_column: 
         plt.ylabel('Values')
     plt.xticks(rotation=45)
-    plt.tight_layout()  # Ensure the layout is adjusted
+    plt.tight_layout() 
     plt.legend()
             
 def overlay_data_points_and_error_bars(data, treatment_to_compare):

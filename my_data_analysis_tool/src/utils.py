@@ -5,14 +5,13 @@ Created on Mon Oct 28 11:35:12 2024
 @author: past
 """
 
-#what utility functions should be here? 
 #general helper functions 
-#file/directory paths which directly belong to data processing oder visualisation 
+#file/directory paths which directly belong to data processing or visualisation 
 #Logging and errormanagement
 #configuration management 
-  
-# utils.py
+
 import pandas as pd
+from tkinter import filedialog
 
 def load_data(file_path):
     if not file_path:
@@ -29,4 +28,10 @@ def load_data(file_path):
     #clean data 
     data = data.dropna()
     return data
+
+def select_file_path():
+    return filedialog.askopenfilename(
+        title="Select the input table",
+        filetypes=[("Text files", "*.txt"), ("CSV files", "*.csv")]
+    )
 

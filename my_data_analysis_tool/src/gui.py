@@ -5,17 +5,17 @@ Created on Mon Oct 28 11:32:21 2024
 @author: past
 """
 
-#GUI related Code 
-from tkinter import Tk, Label, Button, StringVar, filedialog, OptionMenu, LabelFrame
+from tkinter import Tk, Label, Button, StringVar, OptionMenu, LabelFrame, messagebox
 from utils import load_data 
 from data_processing import process_data
 from pca_analysis import perform_pca
 from clustermap_analysis import plot_clustermap
+from utils import select_file_path
 
 def select_file():
     global file_path, loaded_data
-    file_path = filedialog.askopenfilename(title="Select the input table", 
-                                           filetypes=[("Text files", "*.txt"), ("CSV files", "*.csv")])
+    file_path = select_file_path() 
+    
     if file_path:
         file_path_var.set(file_path)  # Update displayed file path
         loaded_data = load_data(file_path)
@@ -33,31 +33,32 @@ treatment_var = StringVar(value="Treatment2")  # Default treatment to compare
 cluster_method_var = StringVar(value="average")  # Default clustering method
 color_map_var = StringVar(value="viridis")  # Default color map
 
-#um Werte für process_data nutzbar zu machen 
-def get_plot_type():
-    return plot_type_var.get()
-def get_treatment():
-    return treatment_var.get()
-
 def process_data_from_gui():
-    if loaded_data is not None: 
-        plot_type = get_plot_type()
-        treatment = get_treatment()
-        process_data(data=loaded_data, plot_type=plot_type, treatment_to_compare=treatment)
+    global loaded_data
+    # Überprüfen, ob die Datei geladen wurde
+    if 'loaded_data' not in globals() or loaded_data is None:
+        messagebox.showerror("Error", "Please select a file before processing data.")
+        return  # Funktion abbrechen, falls keine Datei geladen ist
     else: 
-        print("No data loaded.")
+        process_data(data=loaded_data, plot_type=plot_type_var.get(), treatment_to_compare=treatment_var.get())
     
 def pca_analysis_from_gui(): 
-    if loaded_data is not None:
+    global loaded_data
+    # Überprüfen, ob die Datei geladen wurde
+    if 'loaded_data' not in globals() or loaded_data is None:
+        messagebox.showerror("Error", "Please select a file before processing data.")
+        return  # Funktion abbrechen, falls keine Datei geladen ist
+    else:
         perform_pca(data=loaded_data)
-    else: 
-        print("No data loaded.")
         
 def plot_clustermap_from_gui():
-    if loaded_data is not None:
-        plot_clustermap(data=loaded_data)
+    global loaded_data
+    # Überprüfen, ob die Datei geladen wurde
+    if 'loaded_data' not in globals() or loaded_data is None:
+        messagebox.showerror("Error", "Please select a file before processing data.")
+        return  # Funktion abbrechen, falls keine Datei geladen ist
     else:
-        print("No data loaded.")
+        plot_clustermap(data=loaded_data)
     
 #ensure realtiv window and elementsize 
 root.grid_rowconfigure(0, weight=1)
@@ -108,7 +109,7 @@ treatment_menu.grid(row=3, column=1, columnspan=2, padx=5, pady=5, sticky='ew')
 process_button = Button(root, text="Process Data and Generate Plots", command=process_data_from_gui)
 process_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5, sticky='ew')  
 
-#Labelframe for visual seperation of PCa and CLustermap 
+#Labelframe for visual seperation of PCA and Clustermap 
 label_frame = LabelFrame(root, text = "Advanced insights:", labelanchor = "nw")
 label_frame.grid(row=7, column=0, columnspan=3, padx=5, pady=5, sticky='ew') 
 label_frame.columnconfigure(0, weight=1)  
