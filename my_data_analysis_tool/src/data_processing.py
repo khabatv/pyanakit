@@ -10,8 +10,8 @@ from plotting import (
     plot_violin,
     plot_box,
     plot_bar,
-    plot_scatter,
-    plot_strip,
+    #plot_scatter,
+    #plot_strip,
     plot_line,
     plot_hist,
     plot_heatmap,
@@ -62,14 +62,14 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
         elif plot_type == "Bar Plot":
             plot_bar(melted_data, treatment_to_compare, 'Value', ci=None)
 
-        elif plot_type == "Scatter Plot":
-            plot_scatter(melted_data, treatment_to_compare, 'Value')
+        # elif plot_type == "Scatter Plot":
+        #     plot_scatter(melted_data, treatment_to_compare, 'Value')
         
         elif plot_type == "Line Plot":
             plot_line(melted_data, treatment_to_compare, 'Value')
         
-        elif plot_type == "Strip Plot":
-            plot_strip(melted_data, treatment_to_compare, 'Value')
+        # elif plot_type == "Strip Plot":
+        #     plot_strip(melted_data, treatment_to_compare, 'Value')
 
         elif plot_type == "Histogram":
             plot_hist(melted_data, treatment_to_compare, 'Value')
