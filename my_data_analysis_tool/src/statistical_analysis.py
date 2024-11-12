@@ -8,6 +8,7 @@ Created on Mon Oct 28 11:34:17 2024
 #statistical analysis functions
 
 from scipy.stats import ttest_ind, f_oneway
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 def perform_t_test(melted_data, treatment_to_compare):
     # Conduct a t-test between two treatments if applicable
@@ -32,7 +33,14 @@ def perform_anova(melted_data, treatment_to_compare):
         f_stat, p_value = f_oneway(*groups)
         
         print(f"ANOVA F-statistic: {f_stat}, p-value: {p_value}")
-        return f_stat, p_value
+        if p_value < 0.05: 
+            tukey_result = pairwise_tukeyhsd(melted_data['Value'], melted_data[treatment_to_compare], alpha=0.05)
+            #print(tukey_result)
+            return f_stat, p_value, tukey_result.summary()
+        else:
+            print("Kein signifikanter Unterschied, daher kein Post-hoc-Test erforderlich.")
+            return f_stat, p_value, None
+        
     else:
         print("ANOVA requires more than two treatments.")
-        return None, None
+        return None, None, None

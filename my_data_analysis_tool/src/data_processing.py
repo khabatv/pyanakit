@@ -48,7 +48,10 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
             t_stat, t_p_value = perform_t_test(melted_data, treatment_to_compare)
         else:
             print(f"Performing ANOVA analysis for {treatment_to_compare}...")
-            f_stat, f_p_value = perform_anova(melted_data, treatment_to_compare)
+            f_stat, f_p_value, tukey_summary = perform_anova(melted_data, treatment_to_compare)
+            if tukey_summary is not None:
+                print("Tukey Test Ergebnisse:")
+                print(tukey_summary)
 
         # Generate selected plot type
         plt.figure(figsize=(12, 6))
