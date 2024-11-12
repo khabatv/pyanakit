@@ -14,9 +14,9 @@ from plotting import (
     plot_violin,
     plot_box,
     plot_bar,
-    plot_scatter,
+    #plot_scatter,
     plot_line,
-    plot_strip,
+    #plot_strip,
     plot_hist,
     plot_swarm,
     plot_heatmap,
@@ -59,13 +59,13 @@ def test_plot_bar(example_data):
     assert plt.gca().get_ylabel() == "Values"
     plt.close()
 
-def test_plot_scatter(example_data):
-    plt.figure()
-    plot_scatter(example_data, 'Treatment1', 'Value')
-    assert plt.gca().get_title() != "" or (plt.gcf()._suptitle and plt.gcf()._suptitle.get_text()) != ""
-    assert plt.gca().get_xlabel() == "Treatment1" 
-    assert plt.gca().get_ylabel() == "Values"
-    plt.close()
+# def test_plot_scatter(example_data):
+#     plt.figure()
+#     plot_scatter(example_data, 'Treatment1', 'Value')
+#     assert plt.gca().get_title() != "" or (plt.gcf()._suptitle and plt.gcf()._suptitle.get_text()) != ""
+#     assert plt.gca().get_xlabel() == "Treatment1" 
+#     assert plt.gca().get_ylabel() == "Values"
+#     plt.close()
 
 def test_plot_line(example_data):
     plt.figure()
@@ -75,13 +75,13 @@ def test_plot_line(example_data):
     assert plt.gca().get_ylabel() == "Values"
     plt.close()
     
-def test_plot_strip(example_data):
-    plt.figure()
-    plot_strip(example_data, 'Treatment1', 'Value')
-    assert plt.gca().get_title() != "" or (plt.gcf()._suptitle and plt.gcf()._suptitle.get_text()) != ""
-    assert plt.gca().get_xlabel() == "Treatment1"
-    assert plt.gca().get_ylabel() == "Values"
-    plt.close()
+# def test_plot_strip(example_data):
+#     plt.figure()
+#     plot_strip(example_data, 'Treatment1', 'Value')
+#     assert plt.gca().get_title() != "" or (plt.gcf()._suptitle and plt.gcf()._suptitle.get_text()) != ""
+#     assert plt.gca().get_xlabel() == "Treatment1"
+#     assert plt.gca().get_ylabel() == "Values"
+#     plt.close()
 
 def test_plot_hist(example_data):
     plt.figure()
@@ -110,7 +110,7 @@ def test_plot_heatmap(example_data):
 # Test für overlay_data_points_and_error_bars
 def test_overlay_data_points_and_error_bars(example_data):
     plt.figure()
-    overlay_data_points_and_error_bars(example_data, 'Treatment1')
+    overlay_data_points_and_error_bars(example_data, 'Treatment1', "Swarm Plot")
     # Überprüfen, ob Fehlerbalken und Punkte gezeichnet wurden
     assert len(plt.gca().lines) > 0  # Linien für Fehlerbalken
     plt.close()

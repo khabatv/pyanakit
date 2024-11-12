@@ -75,7 +75,7 @@ def process_data(data, plot_type=None, treatment_to_compare = None):
             plot_hist(melted_data, treatment_to_compare, 'Value')
 
         elif plot_type == "Heatmap":
-            plot_heatmap(data, treatment_to_compare)
+            plot_heatmap(melted_data, treatment_to_compare)
             
         elif plot_type == "Swarm Plot":
             plot_swarm(melted_data, treatment_to_compare,'Value')
