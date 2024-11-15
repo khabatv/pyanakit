@@ -25,6 +25,19 @@ This project features a graphical user interface (GUI) for performing data analy
   - tkinter (usually included with Python)
 
 You can install the required packages using pip:
-
 ```bash
 pip install pandas numpy seaborn matplotlib scikit-learn
+```
+## Start Application 
+- Open a command line interface.
+- Navigate to script: 
+```bash	
+cd C:\Path\to\file
+```
+- Command to start application: 
+```bash	
+python gui.py
+```
+
+
+ 
