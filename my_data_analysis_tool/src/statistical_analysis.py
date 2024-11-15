@@ -38,7 +38,7 @@ def perform_anova(melted_data, treatment_to_compare):
             #print(tukey_result)
             return f_stat, p_value, tukey_result.summary()
         else:
-            print("Kein signifikanter Unterschied, daher kein Post-hoc-Test erforderlich.")
+            print("No significant difference, therefore no post-hoc test required.")
             return f_stat, p_value, None
         
     else:

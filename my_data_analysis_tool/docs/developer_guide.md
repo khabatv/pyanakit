@@ -6,7 +6,21 @@ Created on Mon Oct 28 11:49:16 2024
 """
 
 #Developer Guide 
-Info of each function? 
+
+- Projektübersicht: Beschreibung des Tools, dessen Zweck und Funktionsumfang.
+- Systemanforderungen: Erforderliche Software, Bibliotheken und Python-Version.
+- Installationsanweisungen: Details zur Einrichtung der Entwicklungsumgebung und 
+Installation der erforderlichen Bibliotheken (z. B. durch Anweisungen für pip).
+
+Architektur und design: 
+- Beschreibung der wichtigsten Komponenten und deren Interaktion.
+- UML-Diagramme oder Flussdiagramme zur Visualisierung der Softwarestruktur.
+- Erklärung des Datenflusses innerhalb des Tools.
+
+
+
+
+
 
 - hauptcode in module zerteilen 
 
