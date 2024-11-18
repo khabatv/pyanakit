@@ -15,12 +15,12 @@ def plot_violin(data, treatment_to_compare, y_column):
     overlay_data_points_and_error_bars(data, treatment_to_compare, "Violin Plot")
     style_plot("Violin Plot", treatment_to_compare, y_column)
     
-def plot_box(data, treatment_to_compare, y_column, ci=None):
+def plot_box(data, treatment_to_compare, y_column):
     sns.boxplot(x=treatment_to_compare, y='Value', data=data)
     overlay_data_points_and_error_bars(data, treatment_to_compare, "Box Plot")
     style_plot("Box Plot", treatment_to_compare, y_column)
     
-def plot_bar(data, treatment_to_compare, y_column, ci=None):        
+def plot_bar(data, treatment_to_compare, y_column):        
     sns.barplot(x=treatment_to_compare, y='Value', data=data, estimator='mean', ci=None)
     overlay_data_points_and_error_bars(data, treatment_to_compare, "Bar Plot")
     style_plot("Bar Plot", treatment_to_compare, y_column)
@@ -29,7 +29,11 @@ def plot_bar(data, treatment_to_compare, y_column, ci=None):
 #     sns.scatterplot(data=data, x=treatment_to_compare, y='Value', alpha=.6)
 #     overlay_data_points_and_error_bars(data, treatment_to_compare, "Scatter Plot")
 #     style_plot("Scatter Plot", treatment_to_compare, y_column)
-    
+
+
+
+#re-check this function, cause of different structure in function below 
+#add information in doc!!!!     
 def plot_line(data, treatment_to_compare, y_column):
     summary_stats = data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std']).reset_index()
     sns.lineplot(data=data, x=treatment_to_compare, y='Value', estimator='mean', ci=None)
@@ -82,7 +86,7 @@ def overlay_data_points_and_error_bars(data, treatment_to_compare, plot_type):
         summary_stats = data.groupby(treatment_to_compare)['Value'].agg(['mean', 'std', 'count']).reset_index()
         plt.errorbar(summary_stats[treatment_to_compare], summary_stats['mean'], yerr=summary_stats['std'],
                      fmt='o', color='k', capsize=5, label='Mean ± SD')
-    
+    #re check!!!!!!!
     if plot_type in ("Violin Plot", "Box Plot", "Box Plot"):
         sns.stripplot(x=treatment_to_compare, y='Value', data=data, color='red', alpha=0.6, jitter=True)
        
