@@ -16,7 +16,7 @@ def perform_t_test(melted_data, treatment_to_compare):
     if len(treatments) == 2:
         group1 = melted_data[melted_data[treatment_to_compare] == treatments[0]]['Value']
         group2 = melted_data[melted_data[treatment_to_compare] == treatments[1]]['Value']
-        # Perform the t-test (independant?)
+        # Perform the t-test (independant)
         t_stat, p_value = ttest_ind(group1, group2)
         print(f"t-statistic: {t_stat}, p-value: {p_value}")
         return t_stat, p_value
@@ -38,7 +38,7 @@ def perform_anova(melted_data, treatment_to_compare):
             #print(tukey_result)
             return f_stat, p_value, tukey_result.summary()
         else:
-            print("Kein signifikanter Unterschied, daher kein Post-hoc-Test erforderlich.")
+            print("No significant difference, therefore no post-hoc test required.")
             return f_stat, p_value, None
         
     else:
